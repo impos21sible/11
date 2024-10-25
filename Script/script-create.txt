@@ -1,0 +1,57 @@
+
+
+CREATE TABLE materials (
+	material_id serial4 NOT NULL,
+	material_name varchar(255) NOT NULL,
+	material_type varchar(100) NULL,
+	package_quantity numeric(10, 2) NULL,
+	measurement_unit varchar(50) NULL,
+	warehouse_quantity numeric(10, 2) NULL,
+	min_possible_stock numeric(10, 2) NULL,
+	"cost" numeric(10, 2) NULL,
+	CONSTRAINT materials_pkey PRIMARY KEY (material_id)
+);
+
+
+
+CREATE TABLE product_types (
+	product_type_id serial4 NOT NULL,
+	product_type_name varchar(100) NOT NULL,
+	CONSTRAINT product_types_pkey PRIMARY KEY (product_type_id)
+);
+
+
+
+CREATE TABLE workshops (
+	workshop_id serial4 NOT NULL,
+	workshop_number varchar NOT NULL,
+	workshop_location varchar(255) NULL,
+	CONSTRAINT workshops_pkey PRIMARY KEY (workshop_id)
+);
+
+
+
+CREATE TABLE products (
+	product_id serial4 NOT NULL,
+	product_name varchar NULL,
+	article_number varchar NULL,
+	min_agent_price varchar NULL,
+	image_path varchar(255) NULL,
+	product_type_id int4 NULL,
+	production_people_count int4 NULL,
+	workshop_id int4 NULL,
+	CONSTRAINT products_pkey PRIMARY KEY (product_id),
+	CONSTRAINT products_product_type_id_fkey FOREIGN KEY (product_type_id) REFERENCES product_types(product_type_id),
+	CONSTRAINT products_workshop_id_fkey FOREIGN KEY (workshop_id) REFERENCES workshops(workshop_id)
+);
+
+
+
+CREATE TABLE product_materials (
+	product_id int4 NOT NULL,
+	material_id int4 NOT NULL,
+	required_material_amount numeric(10, 2) NULL,
+	CONSTRAINT product_materials_pkey PRIMARY KEY (product_id, material_id),
+	CONSTRAINT product_materials_material_id_fkey FOREIGN KEY (material_id) REFERENCES materials(material_id) ON DELETE CASCADE,
+	CONSTRAINT product_materials_product_id_fkey FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
+);
